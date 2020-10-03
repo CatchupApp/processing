@@ -3,7 +3,7 @@ import google.cloud.language_v1
 from google.cloud import language_v1
 from google.cloud.language_v1 import enums
 
-client = google.cloud.language_v1.LanguageServiceClient.from_service_account_file('../credentials.json')
+client = google.cloud.language_v1.LanguageServiceClient.from_service_account_file('../../credentials.json')
 
 def get_keywords(text_content):
     """

@@ -1,5 +1,7 @@
+import audio_to_text
 from flask import Flask, flash, redirect, request, url_for
 import os
+import uuid
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -19,12 +21,16 @@ def upload_file():
             return {"status": "error", "message": "no_selected_file"}
 
         # create a secure filename
-        filename = secure_filename(file.filename)
+        filename = uuid.uuid4().hex
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
         # save this file to the uploads folder
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file.save(file_path)
 
-        return {"status": "processing"}
+        response = audio_to_text.transcribe_file(file_path)
+        response = [paragraph.to_json() for paragraph in response]
+
+        return {"status": "success", "uuid": filename, "response": response}
     elif request.method == 'GET':
         return '''
             <!DOCTYPE html>
@@ -46,4 +52,4 @@ if __name__ == "__main__":
     host = "127.0.0.1"
     port = os.environ.get("PORT", 5000)
 
-    app.run(host, port)
+    app.run(host, port, debug=True)

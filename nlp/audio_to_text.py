@@ -1,7 +1,8 @@
 from google.cloud import speech
-from pydub.utils import mediainfo
 import os
 import wave
+
+import text_to_keywords
 
 credential_path = "../../credentials.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
@@ -26,15 +27,17 @@ class SpeechParagraph:
         self.text = transcript
         self.confidence = confidence
         self.words = words
+        self.keywords = text_to_keywords.get_keywords(self.text)
 
     def to_json(self):
         return {
             "text": self.text,
             "confidence": self.confidence,
-            "words": [word.to_json() for word in self.words]
+            "words": [word.to_json() for word in self.words],
+            "keywords": self.keywords
         }
 
-def transcribe_file(speech_file, callback):
+def transcribe_file(speech_file):
     """
     Transcribe the given audio file.
 
@@ -75,10 +78,8 @@ def transcribe_file(speech_file, callback):
 
         res.append(SpeechParagraph(transcript, confidence, words))
         
-    callback(res)
-
-def print_transcription(res):
-    print(res)
+    return res
 
 if __name__ == "__main__":
-    transcribe_file("test_files/test_2.wav", print_transcription)
+    transcription = transcribe_file("test_files/test_2.wav")
+    print(transcription)
