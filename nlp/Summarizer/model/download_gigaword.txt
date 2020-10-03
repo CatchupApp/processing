@@ -1,0 +1,2 @@
+download gigaword model from https://drive.google.com/file/d/1ZF2qO6bAnsTF2LSndLMir3e7NrlFL288/view (2GB)
+unzip and rename the resulting folder "gigaword" (no quotes obv)
