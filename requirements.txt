@@ -4,3 +4,8 @@ google-cloud-speech
 pydub
 moviepy
 werkzeug
+tensorflow==2.2.0
+tensorflow-gpu==2.2.0
+numpy
+sentencepiece
+tfds-nightly
