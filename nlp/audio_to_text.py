@@ -1,9 +1,12 @@
-import os
+from google.cloud import speech
+import io
 from pydub.utils import mediainfo
+import os
 
-credential_path = os.environ["HOME"] + "/google-config/catchup.json"
+credential_path = "../../credentials.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
+client = speech.SpeechClient()
 
 class SpeechWord:
     def __init__(self, word, start, end):
@@ -11,6 +14,12 @@ class SpeechWord:
         self.start = start
         self.end = end
 
+    def to_json(self):
+        return {
+            "word": self.word,
+            "start": self.start,
+            "end": self.end
+        }
 
 class SpeechParagraph:
     def __init__(self, transcript, confidence, words):
@@ -18,16 +27,18 @@ class SpeechParagraph:
         self.confidence = confidence
         self.words = words
 
+    def to_json(self):
+        return {
+            "text": self.text,
+            "confidence": self.confidence,
+            "words": [word.to_json() for word in self.words]
+        }
 
-def transcribe_file(speech_file):
+def transcribe_file(speech_file, callback):
     """
     Transcribe the given audio file.
 
     """
-    from google.cloud import speech
-    import io
-
-    client = speech.SpeechClient()
 
     with io.open(speech_file, "rb") as audio_file:
         content = audio_file.read()
@@ -63,9 +74,11 @@ def transcribe_file(speech_file):
             words.append(SpeechWord(word, start, end))
 
         res.append(SpeechParagraph(transcript, confidence, words))
-    return res
+        
+    callback(res)
 
+def print_transcription(res):
+    print(res)
 
 if __name__ == "__main__":
-    file_transcription = transcribe_file("test_files/test_2.wav")
-    print(file_transcription)
+    transcribe_file("test_files/test_2.wav", print_transcription)

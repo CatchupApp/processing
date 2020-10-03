@@ -1,2 +1,6 @@
+flask
 google-cloud-language
+google-cloud-speech
 pydub
+moviepy
+werkzeug
