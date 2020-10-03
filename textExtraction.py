@@ -1,6 +1,8 @@
 #SUMMA SUCKS ASS USE THE GOOGLE ClOUD EQUIVALENT FOR ALL FUNCTIONS
 
 from summa import summarizer, keyword
+from google.cloud import language_v1
+from google.cloud.language_v1 import enums
 
 
 def format_paragraphs_gc(text):
@@ -31,8 +33,8 @@ def get_text_extraction_indiv(text):
     """gets text extraction of any individual block of text"""
     return {"bullet" : summarizer.summarize(text, ratio=0.4).replace("\n", "").replace("\t", " ")}
 
-def get_salient_entities(text):
-    """Gets all entities and sorts them in order of salience. Uses google cloud"""
+def get_salient_entities(text, top_n=5):
+    """Gets all entities and sorts them in order of salience. returns a list of the top n salient entities. Uses google cloud"""
     pass
 
 def get_text_extraction_gc(text, max_per_para = 2):
@@ -61,3 +63,56 @@ def get_text_extraction_gc(text, max_per_para = 2):
         bullets.append(bullet)
 
     return {"bullets" : bullets}
+
+def get_keywords_mentions_scores(text_content):
+    """
+    Analyzing Entities in a String.
+
+    Args:
+      text_content The text content to analyze
+
+    Gets the salience (importance) scores of each entity, the mentions of that entity in the text, and the metadata of each entity
+    """
+
+    client = language_v1.LanguageServiceClient()
+
+    type_ = enums.Document.Type.PLAIN_TEXT
+
+    language = "en"
+    document = {"content": text_content, "type": type_, "language": language}
+
+    encoding_type = enums.EncodingType.UTF8
+
+    response = client.analyze_entities(document, encoding_type=encoding_type)
+
+    scores = {}
+    mentions = {}
+    meta = {}
+
+    for entity in response.entities:
+        #print(u"Representative name for the entity: {}".format(entity.name))
+
+        #print(u"Entity type: {}".format(enums.Entity.Type(entity.type).name))
+
+        #print(u"Salience score: {}".format(entity.salience))
+
+        scores[entity.name] = entity.salience
+        mentions[entity.name] = []
+        meta[entity.name] = {}
+
+        for metadata_name, metadata_value in entity.metadata.items():
+            #print(u"{}: {}".format(metadata_name, metadata_value))
+            meta[entity.name][metadata_name] = metadata_value
+
+        for mention in entity.mentions:
+            #print(u"Mention text: {}".format(mention.text.content))
+
+            #print(
+            #    u"Mention type: {}".format(enums.EntityMention.Type(mention.type).name)
+            #)
+
+            mentions[entity.name].append(mention.text.content)
+
+    #print(u"Language of the text: {}".format(response.language))
+
+    return scores, mentions, meta
