@@ -115,4 +115,4 @@ def get_keywords_mentions_scores(text_content):
 
     #print(u"Language of the text: {}".format(response.language))
 
-    return scores, mentions, meta
+    return {"Scores" : scores, "Mentions" : mentions, "Metadata" : meta}
