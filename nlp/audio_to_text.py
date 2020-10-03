@@ -1,7 +1,7 @@
 from google.cloud import speech
-import io
 from pydub.utils import mediainfo
 import os
+import wave
 
 credential_path = "../../credentials.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
@@ -40,12 +40,12 @@ def transcribe_file(speech_file, callback):
 
     """
 
-    with io.open(speech_file, "rb") as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
-    minfo = mediainfo(speech_file)
-    sample_rate = int(minfo['sample_rate'])
-    num_channels = int(minfo['channels'])
+    with wave.open(speech_file, "rb") as wave_file:
+        sample_rate = wave_file.getframerate()
+        num_channels = wave_file.getnchannels()
 
     audio = speech.RecognitionAudio(content=content)
     config = speech.RecognitionConfig(
