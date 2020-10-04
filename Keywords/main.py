@@ -48,7 +48,7 @@ def process_audio(file, context):
 
     transcriptions = []
 
-    annotation_results = operation.result(timeout=600)
+    annotation_results = operation.result()
     first_result = annotation_results.annotation_results[0]
     speech_transcriptions_raw = first_result.speech_transcriptions
 
