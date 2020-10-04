@@ -1,6 +1,6 @@
 from flask import Flask, request
-from summarizer import summarize
-from mathocr import *
+from Summarizer.summarizer import summarize
+from other_functions.mathocr import *
 
 app = Flask(__name__)
 
