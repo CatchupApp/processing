@@ -1,12 +1,6 @@
 from google.cloud import speech
-import os
-import wave
 
 import text_to_keywords
-
-if 'GOOGLE_APPLICATION_CREDENTIALS' not in os.environ:
-    # os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '../../credentials.json'
-    pass
 
 client = speech.SpeechClient()
 

@@ -1,3 +1,9 @@
+import os
+
+if 'GOOGLE_APPLICATION_CREDENTIALS' not in os.environ:
+    # os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '../../credentials.json'
+    pass
+
 from audio_to_text import transcribe_file
 from google.cloud import storage
 from io import BytesIO
@@ -37,6 +43,3 @@ def process_audio(file, context):
 
     print("File {} processed.".format(file["name"]))
     print(result[0].to_json())
-
-if __name__ == "__main__":
-    process_audio({"bucket": "catchup-app", "name": "audio/test_2.wav"}, {})
