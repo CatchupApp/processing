@@ -2,6 +2,8 @@ import requests
 import base64
 import wolframalpha
 import wikipedia
+import os
+import json
 
 appId = 'APER4E-58XJGHAVAK'
 client = wolframalpha.Client(appId)
@@ -29,41 +31,27 @@ def eq_from_img(path, token="solve"):
         e.g. 'derivative y=x^2' returns 'y=2x'
     """
 
-    imgstr = get_str_from_img(path)
-    return eq_from_str(imgstr, token)
+    #imgstr = get_str_from_img(path)
+    #return eq_from_str(imgstr, token)
+    eq = get_eq_os(path)
+    return search(token + ' ' + eq)
 
-    
 
 def get_str_from_img(path):
     return base64.b64encode(open(path, "rb").read())
 
-def get_eq(imgstr):
-
-    headers = {
-          "content-type": "application/json",
-          "app_id": "YOUR_APP_ID",
-          "app_key": "YOUR_APP_KEY"
-        }
-
-    data = {
-            "src": "data:image/jpeg;base64,"+imgstr,
-            "formats": ["text", "data", "html"],
-            "data_options": {
-                "include_asciimath": True,
-                "include_latex": True
-            }
-        }
 
 
+def get_eq_os(path):
 
+    data = ' \'{ "src": "data:image/jpeg;base64,' + str(get_str_from_img(path))[2:][:-1] + '" , "data_options" : {"include_asciimath" : true}, "formats" : ["text", "data", "html"] }\' '
 
-    r = requests.post('https://api.mathpix.com/v3/text', data=data, headers=headers)
+    oscmd = 'curl -X POST https://api.mathpix.com/v3/text -H "appId: APP_ID" -H "app_key: APP_KEY" -H "Content-Type: application/json" --data '+data
+    result = os.popen(oscmd).read()
 
-    response = r.json()
+    res = json.loads(result)
+    return res['data'][0]['value']
 
-    eq = response["data"][0]["value"]
-
-    return eq
 
 def search_wiki(keyword=''):
     searchResults = wikipedia.search(keyword)
@@ -120,4 +108,4 @@ def primaryImage(title=''):
         print('')
         return ''
 
-#print(search('solve y=x^2'))
+print(eq_from_img("blackeq.jpeg"))
