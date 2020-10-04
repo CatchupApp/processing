@@ -108,4 +108,50 @@ def primaryImage(title=''):
         print('')
         return ''
 
-print(eq_from_img("blackeq.jpeg"))
+
+class MyException(Exception):pass
+
+global clicks
+global numclicks
+
+numclicks=0
+
+clicks = {}
+
+def capture_eq(TopLeft, TopRight):
+    im=ps.grab(bbox=(TopLeft[0], TopLeft[1], TopRight[0], TopRight[1]))
+    return im
+
+def run_local():
+    while True:
+        if keyboard.is_pressed("c"):
+            print("Click image bounds")
+
+            with mouse.Listener(on_click=on_click) as listener:
+                try:
+                    listener.join()
+                except MyException as e:
+                    pass
+
+def on_click(x, y, button, pressed):
+    global clicks
+    global numclicks
+
+    numclicks+=0.5
+
+    clicks[numclicks] = [x, y]
+
+
+    if (numclicks >= 2):
+        im = capture_eq(clicks[1.0], clicks[2.0])
+        im = im.convert("RGB")
+        im.save("equation.jpeg")
+        print(eq_from_img("equation.jpeg"))
+        sys.exit(0)
+
+
+
+
+#print(eq_from_img("blackeq.jpeg"))
+
+run_local()
