@@ -20,4 +20,4 @@ def do_math():
 
     return eq_from_str(imgstr)
 
-app.run(Threaded=True)
+app.run(threaded=True)
