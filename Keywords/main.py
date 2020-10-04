@@ -7,6 +7,7 @@ if 'GOOGLE_APPLICATION_CREDENTIALS' not in os.environ:
 from audio_to_text import transcribe_file
 from google.cloud import storage
 from io import BytesIO
+import mongo
 import wave
 
 def validate_message(message, param):
@@ -39,7 +40,11 @@ def process_audio(file, context):
 
     output.seek(0)
 
-    result = transcribe_file(output, channels)
+    response = transcribe_file(output, channels)
+    response = [paragraph.to_json() for paragraph in response]
+
+    mongo.set_keyword_data(file["name"], response)
 
     print("File {} processed.".format(file["name"]))
-    print(result[0].to_json())
+
+# process_audio({"bucket": "catchup-app", "name": "audio/test.wav"}, {})

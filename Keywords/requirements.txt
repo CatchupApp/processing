@@ -1,3 +1,5 @@
+dnspython
 google-cloud-language
 google-cloud-storage
 google-cloud-speech
+pymongo

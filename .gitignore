@@ -1,5 +1,7 @@
 __pycache__/
 nlp/uploads/
+Keywords/mongo_url.txt
+Keywords/deployer.txt
 
 # IDEA Ignores #
 ################
