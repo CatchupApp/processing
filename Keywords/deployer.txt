@@ -1,0 +1,1 @@
+gcloud functions deploy process_audio --runtime python38 --trigger-bucket catchup-app --entry-point process_audio
