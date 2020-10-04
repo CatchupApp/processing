@@ -37,18 +37,18 @@ class SpeechParagraph:
             "keywords": self.keywords
         }
 
-def transcribe_file(google_cloud_uri):
+def transcribe_file(content, channels=2):
     """
     Transcribe the given audio file.
     """
 
-    audio = speech.RecognitionAudio(uri=google_cloud_uri)
+    audio = speech.RecognitionAudio(content=content.read())
     config = speech.RecognitionConfig(
         language_code="en-US",
         enable_word_time_offsets=True,
         enable_automatic_punctuation=True,
         # sample_rate_hertz=sample_rate,
-        # audio_channel_count=num_channels
+        audio_channel_count=channels
     )
 
     response = client.recognize(request={"config": config, "audio": audio})
@@ -71,7 +71,3 @@ def transcribe_file(google_cloud_uri):
         res.append(SpeechParagraph(transcript, confidence, words))
         
     return res
-
-if __name__ == "__main__":
-    transcription = transcribe_file("test_files/test_2.wav")
-    print(transcription)

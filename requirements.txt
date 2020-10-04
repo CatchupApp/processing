@@ -1,6 +1,7 @@
 flask
 google-cloud-language
 google-cloud-speech
+google-cloud-storage
 pydub
 moviepy
 werkzeug
