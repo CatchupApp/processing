@@ -4,9 +4,6 @@ import wave
 
 import text_to_keywords
 
-credential_path = "../../credentials.json"
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
-
 client = speech.SpeechClient()
 
 class SpeechWord:
