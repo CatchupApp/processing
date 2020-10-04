@@ -50,7 +50,7 @@ def get_eq_os(imgstr):
 
     data = ' \'{ "src": "data:image/jpeg;base64,' + imgstr + '" , "data_options" : {"include_asciimath" : true}, "formats" : ["text", "data", "html"] }\' '
 
-    oscmd = 'curl -X POST https://api.mathpix.com/v3/text -H "appId: snandiraju1_gmail_com_a63429" -H "app_key: d2b475f4b836712bee9f" -H "Content-Type: application/json" --data '+data
+    oscmd = 'curl -X POST https://api.mathpix.com/v3/text -H "appId: APP_ID" -H "app_key: APP_KEY" -H "Content-Type: application/json" --data '+data
     result = os.popen(oscmd).read()
 
     res = json.loads(result)
